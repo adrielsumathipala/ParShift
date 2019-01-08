@@ -6,13 +6,13 @@ An Open MP and MPI implementation of the mean shift algorithm in C
 
 ## Introduction:
 
-	The mean shift algorithm is a technique for obtaining the probability density maxima in a non-parametric feature space using a kernel density function and gradient ascent. An unsupervised machine learning technique, mean shift is used for cluster analysis, image segmentation, and object tracking. Unlike the k-means algorithm, the mean shift algorithm does not require a pre-specified number of clusters and uses a single tunable bandwidth parameter controlling the Parzen window.
+The mean shift algorithm is a technique for obtaining the probability density maxima in a non-parametric feature space using a kernel density function and gradient ascent. An unsupervised machine learning technique, mean shift is used for cluster analysis, image segmentation, and object tracking. Unlike the k-means algorithm, the mean shift algorithm does not require a pre-specified number of clusters and uses a single tunable bandwidth parameter controlling the Parzen window.
 
-	One primary disadvantage of the mean shift algorithm is its quadratic time-complexity. Given *n* datapoints and *T* iterations to reach convergence, the algorithm is *O(Tn²)*. Developing fast, parallel implementation is essential to using the mean shift algorithm to process massive high-dimensional datasets, video libraries, and image collections. 
+One primary disadvantage of the mean shift algorithm is its quadratic time-complexity. Given *n* datapoints and *T* iterations to reach convergence, the algorithm is *O(Tn²)*. Developing fast, parallel implementation is essential to using the mean shift algorithm to process massive high-dimensional datasets, video libraries, and image collections. 
 
 ## Implementation Overview:
 
-	ParShift uses two approaches to parallelization: OpenMP (multi-threading) and OpenMP + MPI (multi-threading on multiple nodes). Depending on the application, computing resources (e.g. single vs. multi-node) and data dimensionality, some implementations will be more effective than others.
+ParShift uses two approaches to parallelization: OpenMP (multi-threading) and OpenMP + MPI (multi-threading on multiple nodes). Depending on the application, computing resources (e.g. single vs. multi-node) and data dimensionality, some implementations will be more effective than others.
 
 ### OpenMP Implementation:
 
@@ -38,12 +38,11 @@ For benchmarking results, see the [ParShift report](ParShift_Paper.pdf). Briefly
 
 ## Implementation Details:
 
-The Open MPI program
-
-	When running on a cluster, make sure the ICC compiler and Open MPI libraries are loaded:
+When running on a cluster, make sure the ICC compiler and Open MPI libraries are loaded:
 
 ```
 >> module load Langs/Intel/15.0.2
 >> module load Langs/Intel/15.0.2 MPI/OpenMPI/2.1.1-intel15
 ```
-	ParShift uses the Gaussian kernel. Other kernels can be implemented, such as those listed [here](https://en.wikipedia.org/wiki/Kernel_(statistics)#Nonparametric_statistics).
+
+ParShift uses the Gaussian kernel. Other kernels can be implemented, such as those listed [here](https://en.wikipedia.org/wiki/Kernel_(statistics)#Nonparametric_statistics).
