@@ -1,14 +1,12 @@
-# ParShift
-
-An Open MP and MPI implementation of the mean shift algorithm in C
+# ParShift — An Open MP and MPI implementation of the mean shift algorithm in C
 
 **A thorough explanation of the implementation and benchmarking of ParShift can be found in [ParShift Paper](ParShift_Paper.pdf) document**
 
 ## Introduction:
 
-The mean shift algorithm is a technique for obtaining the probability density maxima in a non-parametric feature space using a kernel density function and gradient ascent. An unsupervised machine learning technique, mean shift is used for cluster analysis, image segmentation, and object tracking. Unlike the k-means algorithm, the mean shift algorithm does not require a pre-specified number of clusters and uses a single tunable bandwidth parameter controlling the Parzen window.
+The mean shift algorithm is a technique for obtaining the probability density maxima in a non-parametric feature space using a kernel density function and gradient ascent. An unsupervised machine learning technique, mean shift is used for cluster analysis, image segmentation, and object tracking. Unlike the *k*-means algorithm, the mean shift uses a single, tunable bandwidth parameter and does not require a pre-specified number of clusters.
 
-One primary disadvantage of the mean shift algorithm is its quadratic time-complexity. Given *n* datapoints and *T* iterations to reach convergence, the algorithm is *O(Tn²)*. Developing fast, parallel implementation is essential to using the mean shift algorithm to process massive high-dimensional datasets, video libraries, and image collections. 
+One primary disadvantage of the mean shift algorithm is its quadratic time-complexity. Given *n* datapoints and *T* iterations to reach convergence, the algorithm is *O(T n ²)*. Developing a fast, parallel implementation is essential to using the mean shift to process massive high-dimensional datasets, video libraries, and image collections. 
 
 ## Implementation Overview:
 
@@ -18,19 +16,29 @@ ParShift uses two approaches to parallelization: OpenMP (multi-threading) and Op
 
 A single-node implementation for multi-threading. Three implementations using OpenMP's Loops and Tasks paradigm are availiable.
 
-* Parallel Loops — Usage: `./for <n> <p> <bandwidth> <number of threads>`. For certain problems, users may need to adjust between dynamic and static loop allocation for optimal load balancing.
+#### Parallel Loops 
+— Usage: `./for <n> <p> <bandwidth> <number of threads>`. 
+- For certain problems, users may need to adjust between dynamic and static loop allocation for optimal load balancing.
 
-* Tasks — Usage: `./tasks <n> <p> <bandwidth> <number of threads>`. This implementation treats computing the shift for each point as independent tasks. In some cases, using multiple-thread task generation instead of single-thread task generation may improve performance.
+#### Tasks 
+— Usage: `./tasks <n> <p> <bandwidth> <number of threads>`. 
+- This implementation treats computing the shift for each point as independent tasks. In some cases, using multiple-thread task generation instead of single-thread task generation may improve performance.
 
-* Parallel Loops and Tasks — Usage: `./for-tasks <n> <p> <bandwidth> <number of threads>`. In testing, the overhead of managing both loops and tasks generally outweighed the increased parallelization benefits, but may lead to improved performance in certain applications.
+#### Parallel Loops and Tasks 
+— Usage: `./for-tasks <n> <p> <bandwidth> <number of threads>`. 
+- In testing with randomly sampled data, the overhead of managing both loops and tasks generally outweighed the increased parallelization benefits, but, in some applications, using tasks and loops together may lead to improved performance.
 
 ### OpenMP + MPI Implementation:
 
-A multi-node implementation with built-in multi-threading for maximum performance using OpenMP and MPI. If OpenMP is not availiable on nodes, a MPI-only implementation can be found in `mpi.c`. If using a cluster with slurm, the `mpi.sh` file can be used to execute the code, with `ntasks`, `nodes`, and `cpus-per-task` adjusted as needed to run the job.
+A multi-node implementation with built-in multi-threading for maximum performance using OpenMP and MPI. If OpenMP is not availiable on nodes, an MPI-only implementation can be found in `mpi.c`. If using a cluster with slurm, the `mpi.sh` file can be used to execute the code, with `ntasks`, `nodes`, and `cpus-per-task` adjusted as needed to run the job.
 
-* MPI + OpenMP Loops — Usage: Edit `./mpi-for.sh` and set `mpirun ./mpi-for <n> <p> <bandwidth>` appropriately. Then, run `./mpi-for.sh`. This program uses the Open MP loops paradigm, which, in the case of well-balanced workloads, can perform better than the Open MP tasks.
+#### MPI + OpenMP Loops 
+— Usage: Edit `./mpi-for.sh` and set `mpirun ./mpi-for <n> <p> <bandwidth>` appropriately. Then, run `./mpi-for.sh`. 
+- This program uses the Open MP loops paradigm, which, in the case of well-balanced workloads, can perform better than the Open MP tasks.
 
-* MPI + OpenMP Tasks — Usage: Edit `./mpi-tasks.sh` and set `mpirun ./mpi-tasks <n> <p> <bandwidth>` appropriately. Then, run `./mpi-tasks.sh`. This program uses the Open MP tasks paradigm. This is generally the optimal program and using tasks greatly improves load balancing, leading to substantial performance improvements. For applications, the MPI + OpenMP tasks program should be used first.
+#### MPI + OpenMP Tasks 
+— Usage: Edit `./mpi-tasks.sh` and set `mpirun ./mpi-tasks <n> <p> <bandwidth>` appropriately. Then, run `./mpi-tasks.sh`.
+- This program uses the Open MP tasks paradigm. This is generally the optimal multi-node program and using tasks greatly improves load balancing, leading to substantial performance improvements. Thus, for most applications the MPI + OpenMP tasks program will be suitable.
 
 ### Benchmarking:
 
