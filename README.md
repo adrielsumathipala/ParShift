@@ -1,4 +1,4 @@
-# ParShift — An Open MP and MPI implementation of the mean shift algorithm in C
+# ParShift — A Parallel Implementation of the Mean Shift Algorithm
 
 **A thorough explanation of the implementation and benchmarking of ParShift can be found in [ParShift Paper](ParShift_Paper.pdf) document**
 
