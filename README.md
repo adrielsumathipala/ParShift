@@ -2,7 +2,7 @@
 
 An Open MP and MPI implementation of the mean shift algorithm in C
 
-**A thorough explanation of the implementation and benchmarking of ParShift can be found in [ParShift Paper](ParShift_Paper.pdf) document**
+**A thorough explanation of the implementation and benchmarking of ParShift can be found in the [ParShift Paper](ParShift_Paper.pdf) document**
 
 ## Introduction:
 
